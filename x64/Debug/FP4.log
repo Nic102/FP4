@@ -1,0 +1,9 @@
+﻿  Parametr.cpp
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(21,24): warning C4244: +=: преобразование "double" в "int", возможна потеря данных
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(143,29): warning C4805: ==: небезопасное смешение типа "char" и типа "bool" в операции
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(238,16): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(243,116): warning C4805: ==: небезопасное смешение типа "char" и типа "bool" в операции
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(323,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(356,21): warning C4244: =: преобразование "int" в "float", возможна потеря данных
+C:\Users\localadmin\Desktop\FP4\Parametr.cpp(263,21): warning C4101: i: неиспользованная локальная переменная
+  FP4.vcxproj -> C:\Users\localadmin\Desktop\FP4\x64\Debug\FP4.exe
