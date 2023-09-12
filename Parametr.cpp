@@ -4,13 +4,56 @@
 #include <sstream>
 using namespace std;
 
+char KT = false;
+
+void hexInBin(string a,bitset<32> &b) 
+{
+    string c;
+    for(auto &elem : a)
+        c.append([](char s)->string
+        {
+                switch (s)
+                {
+                    case '0': return "0000";
+                    case '1': return "0001";
+                    case '2': return "0010";
+                    case '3': return "0011";
+                    case '4': return "0100";
+                    case '5': return "0101";
+                    case '6': return "0110";
+                    case '7': return "0111";
+                    case '8': return "1000";
+                    case '9': return "1001";
+                    case 'A': return "1010";
+                    case 'B': return "1011";
+                    case 'C': return "1100";
+                    case 'D': return "1101";
+                    case 'E': return "1110";
+                    case 'F': return "1111";
+                    case 'a': return "1010";
+                    case 'b': return "1011";
+                    case 'c': return "1100";
+                    case 'd': return "1101";
+                    case 'e': return "1110";
+                    case 'f': return "1111";
+                }
+                return "";
+        }(elem));
+    for (int i = 0; i < 32; i++) 
+        if (c[i]=='1')
+            b[31 - i] = 1;
+        else if(c[i]=='0')
+            b[31 - i] = 0;
+
+}
+
 
 void razdelenie(bitset<32> in_ch, bitset<1>& znak, bitset<8>& exp, bitset<23>& mantisa)
 {
     znak[0] = in_ch[31];
     for (int i = 0; i < 31; i++)
-        if (i < 23) { mantisa[i] = in_ch[i]; }
-        else { exp[i - 23] = in_ch[i]; }
+        if (i < 23)  mantisa[i] = in_ch[i]; 
+        else  exp[i - 23] = in_ch[i]; 
 }
 
 
@@ -26,8 +69,7 @@ void Okruglenie(bitset<48>& vrem_1, int step)
 {
     int i = 23;
     while (i < size(vrem_1))
-        if (vrem_1[i] == 1)
-        {
+        if (vrem_1[i] == 1) {
             if (i < (size(vrem_1) - 1))
             {
                 vrem_1[i] = 0;
@@ -66,13 +108,9 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     BinInDec8(exp2, step2);
 
     if (znak1 != znak2 and exp1 == exp2 and mantisa1 == mantisa2)
-    {
         return;
-    }
     else if (znak1 != znak2 and exp1 == exp2 and mantisa1 != mantisa2)
-    {
         odin_exp = true;
-    }
 
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
@@ -87,68 +125,61 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
         num_in_fun2 = data.output;
 
         if (abs(num_in_fun1) > abs(num_in_fun2))
-        {
             maximum = false;
-        }
         else if (abs(num_in_fun1) < abs(num_in_fun2))
-        {
             maximum = true;
-        }
     }
 
-    for (int i = 0; i < size(vrem1); i++)//ïåğåçàïèñü ìàíòèñû ğàçìåğîì 23 áèòà â áóôåğíóş ïåğåìåííóş ğàçìåğîì 48 áèò (Âîçìîæíî ìîæíî ñîêğàòèòü!!!!)
-    {
+    for (int i = 0; i < size(vrem1); i++)//Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ¿Ğ¸ÑÑŒ Ğ¼Ğ°Ğ½Ñ‚Ğ¸ÑÑ‹ Ñ€Ğ°Ğ·Ğ¼ĞµÑ€Ğ¾Ğ¼ 23 Ğ±Ğ¸Ñ‚Ğ° Ğ² Ğ±ÑƒÑ„ĞµÑ€Ğ½ÑƒÑ Ğ¿ĞµÑ€ĞµĞ¼ĞµĞ½Ğ½ÑƒÑ Ñ€Ğ°Ğ·Ğ¼ĞµÑ€Ğ¾Ğ¼ 48 Ğ±Ğ¸Ñ‚
         if (i < (size(vrem1) - 2) / 2)
         {
             vrem1[i + (size(vrem1) - 2) / 2] = mantisa1[i];
             vrem2[i + (size(vrem1) - 2) / 2] = mantisa2[i];
         }
-    }
 
-    //cout << endl << "Ìàíòèñà 1 ------------ " << vrem1 << endl;
-    //cout << "Ìàíòèñà 2 ------------ " << vrem2 << endl << endl;
-
-    vrem1[size(vrem1) - 2] = 1;//Ê ìàíòèñå äîáàâèëè 1 áèò ñ ëåâà
+    vrem1[size(vrem1) - 2] = 1;
     vrem2[size(vrem2) - 2] = 1;
 
-    //cout << "+1 äëÿ 1 ìíèìàÿ ------ " << vrem1 << endl;
-    //cout << "+1 äëÿ 2 ìíèìàÿ ------ " << vrem2 << endl << endl;
-
     if (step1 == step2)
-    {
         step = step1;
-    }
-    else if (step1 > step2)//ğàçíèöà ìàíòèñ
+    else if (step1 > step2)
     {
         step = step1 - step2;
+        if (KT == true)
+            cout << "1) Ğ Ğ°Ğ·Ğ½Ğ¸Ñ†Ğ° exp ----------- " << step << endl;
         vrem2 >>= step;
         step = step1;
-        //cout << "íîğìàëèçîâàëè 2 ------ " << vrem2 << endl << endl;
+        if (KT == true)
+        {
+            cout << "2) Ğ”ĞµĞ½Ğ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ -------- ";
+            for (int i = size(vrem2)-1; i > 23; i--) 
+                cout << vrem2[i];
+            cout << endl;
+        }
     }
     else if (step1 < step2)
     {
         step = step2 - step1;
+        if (KT == true)
+            cout << "1) Ğ Ğ°Ğ·Ğ½Ğ¸Ñ†Ğ° exp ----------- " << step << endl;
         vrem1 = vrem1 >> step;
         step = step2;
-        //cout << "íîğìàëèçîâàëè 1 ------ " << vrem1 << endl << endl;
+        if (KT == true)
+        {
+            cout << "2) Ğ”ĞµĞ½Ğ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ -------- ";
+            for (int i = size(vrem2)-1; i > 23; i--)
+                cout << vrem2[i];
+            cout << endl;
+        }
     }
 
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
-        if (maximum == false)//Èíâåğòèğóş íó ìàíòèñó êîòîğàÿ ìåíüøå
-        {
+        if (maximum == false)
             vrem2 = ~vrem2;
-            //cout << "èíâåğòèğîâàëè 2 ------ " << vrem2 << endl << endl;
-        }
         else if (maximum == true)
-        {
             vrem1 = ~vrem1;
-            //cout << "èíâåğòèğîâàëè 1 ------ " << vrem1 << endl << endl;
-        }
     }
-
-    //cout << "äî ñëîæåíèÿ 1 -------- " << vrem1 << endl;
-    //cout << "äî ñëîæåíèÿ 2 -------- " << vrem2 << endl;
 
     while (vrem2 != 0)
     {
@@ -156,13 +187,18 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
         vrem1 ^= vrem2;
         vrem2 = vrem << 1;
     }
+    if (KT == true)
+    {
+        cout << "3) Ğ ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚ ÑĞ»Ğ¾Ğ¶ĞµĞ½Ğ¸Ñ ---- ";
+        for (int i = size(vrem1) - 1; i > 23; i--)
+            cout << vrem1[i];
+        cout << endl;
+    }
 
-    //cout << endl << "Ñóììà äâóõ ìàíòèñ ---- " << vrem1 << endl << endl;
-
-    if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
+    if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))//(znak1[0] == 1 or znak2[0] == 1) Ğ»Ğ¸ÑˆĞ½ĞµĞµ?
     {
         i = 0;
-        while (i < size(vrem1))//-------------äîáàâèòü 1 áèò
+        while (i < size(vrem1))
             if (vrem1[i] == 1)
             {
                 if (i < size(vrem1) - 1)
@@ -183,27 +219,36 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
                 break;
             }
 
-        //cout << "+1 áèò ò.ê îòğèö ----- " << vrem1 << endl << endl;
-
         if ((exp1 != exp2))
-        {
-            while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)//åñëè 00 â íà÷àëå 
+            while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)
             {
                 vrem1 <<= 1;
                 step -= 1;
             }
-        }
-        //cout << "íîğìàëèçàöèÿ --------- " << vrem1 << endl << endl;
 
+        if (KT == true)
+        {
+            cout << "4) ĞĞ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ ----- ";
+            for (int i = size(vrem1) - 1; i > 23; i--)
+                cout << vrem1[i];
+            cout << endl;
+        }
     }
 
     if (vrem1[size(vrem1) - 1] != 0)
     {
         vrem1 >>= 1;
         step += 1;
+        if (KT == true)
+        {
+            cout << "4) ĞĞ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ°Ñ†Ğ¸Ñ ----- ";
+            for (int i = size(vrem1) - 1; i > 23; i--)
+                cout << vrem1[i];
+            cout << endl;
+        }
     }
 
-    if (vrem1[(size(vrem1) - 2) / 2] == 1 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//Îêğóãëåíèå åñëè 1 â êîíöå ìàíòèñû è õâîñò íà÷èíàåòñÿ ñ 1
+    if (vrem1[(size(vrem1) - 2) / 2] == 1 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//ĞĞºÑ€ÑƒĞ³Ğ»ĞµĞ½Ğ¸Ğµ ĞµÑĞ»Ğ¸ 1 Ğ² ĞºĞ¾Ğ½Ñ†Ğµ Ğ¼Ğ°Ğ½Ñ‚Ğ¸ÑÑ‹ Ğ¸ Ñ…Ğ²Ğ¾ÑÑ‚ Ğ½Ğ°Ñ‡Ğ¸Ğ½Ğ°ĞµÑ‚ÑÑ Ñ 1
     {
         Okruglenie(vrem1, step);
 
@@ -212,19 +257,22 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             vrem1 >>= 1;
             step += 1;
         }
-
-        //cout << "       okruglenie ---- " << vrem1 << endl << endl;
+        if (KT == true)
+        {
+            cout << "5) ĞĞºÑ€ÑƒĞ³Ğ»ĞµĞ½Ğ¸Ğµ ----- ";
+            for (int i = size(vrem1) - 1; i > 23; i--)
+                cout << vrem1[i];
+            cout << endl;
+        }
     }
-    else if (vrem1[(size(vrem1) - 2) / 2] == 0 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//Îêğóãëåíèå åñëè 0 â êîíöå ìàíòèñû è õâîñò íà÷èíàåòñÿ ñ 1 è åñòü õîòÿ áû îäíà åäèíèöà â õâîñòå êğîìå ïåğâîé
+    else if (vrem1[(size(vrem1) - 2) / 2] == 0 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//ĞĞºÑ€ÑƒĞ³Ğ»ĞµĞ½Ğ¸Ğµ ĞµÑĞ»Ğ¸ 0 Ğ² ĞºĞ¾Ğ½Ñ†Ğµ Ğ¼Ğ°Ğ½Ñ‚Ğ¸ÑÑ‹ Ğ¸ Ñ…Ğ²Ğ¾ÑÑ‚ Ğ½Ğ°Ñ‡Ğ¸Ğ½Ğ°ĞµÑ‚ÑÑ Ñ 1 Ğ¸ ĞµÑÑ‚ÑŒ Ñ…Ğ¾Ñ‚Ñ Ğ±Ñ‹ Ğ¾Ğ´Ğ½Ğ° ĞµĞ´Ğ¸Ğ½Ğ¸Ñ†Ğ° Ğ² Ñ…Ğ²Ğ¾ÑÑ‚Ğµ ĞºÑ€Ğ¾Ğ¼Ğµ Ğ¿ĞµÑ€Ğ²Ğ¾Ğ¹
     {
         for (int i = 0; i < ((size(vrem1) - 2) / 2) - 1; i++)
-        {
             if (vrem1[i] == 1)
             {
                 Okruglenie(vrem1, step);
                 break;
             }
-        }
 
         if (vrem1[size(vrem1) - 1] != 0)
         {
@@ -232,26 +280,27 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             step += 1;
         }
 
-        //cout << "       okruglenie ---- " << vrem1 << endl << endl;
+        if (KT == true)
+        {
+            cout << "5) ĞĞºÑ€ÑƒĞ³Ğ»ĞµĞ½Ğ¸Ğµ ----- ";
+            for (int i = size(vrem1) - 1; i > 23; i--)
+                cout << vrem1[i];
+            cout << endl;
+        }
     }
 
-    for (int i = ((size(vrem1) / 2) + 1); i < size(vrem1); i++)//ïåğåçàïèñü áóôåğíîé ïåğåìåííîé ìàíòèñû â ïåğåìåííóş îòâåòà
-    {
+    for (int i = ((size(vrem1) / 2) + 1); i < size(vrem1); i++)//Ğ¿ĞµÑ€ĞµĞ·Ğ°Ğ¿Ğ¸ÑÑŒ Ğ±ÑƒÑ„ĞµÑ€Ğ½Ğ¾Ğ¹ Ğ¿ĞµÑ€ĞµĞ¼ĞµĞ½Ğ½Ğ¾Ğ¹ Ğ¼Ğ°Ğ½Ñ‚Ğ¸ÑÑ‹ Ğ² Ğ¿ĞµÑ€ĞµĞ¼ĞµĞ½Ğ½ÑƒÑ Ğ¾Ñ‚Ğ²ĞµÑ‚Ğ°
         otv[i - ((size(vrem1) / 2) + 1)] = vrem1[i - 2];
-    }
 
     if ((znak1[0] == 1 and znak2[0] == 1) or (znak1[0] == 1 and maximum == false) or (znak2[0] == 1 and maximum == true))
-    {
         otv[size(otv) - 1] = 1;
-    }
 
     bitset<8>bin_exp(step);
     exp1 = bin_exp;
 
     for (int i = 0; i < 8; i++)
-    {
         otv[((size(vrem1) - 2) / 2) + i] = exp1[i];
-    }
+
 }
 
 
@@ -262,49 +311,21 @@ int main()
     float num_1, num_2, res, vvod1, vvod2;
     int errors = 0, i, q = 0, q1 = 0, q2 = 0, q3 = 0, q4 = 0, exp_len = 0, mant_len = 0;
     string nestandartniy_otv1, nestandartniy_otv2, hex1, hex2;
-    char pref1, pref2;
+    char pref1, pref2, KT_in;
 
-    //in_ch =  0b10000000100000000000000000000001;
-    //in_ch2 = 0b00010110011111111111111111111111;
-    //          ^      ^
-    //for (int i = 0; i < 500; i++)
-    //{
-        //test1 = 0b00000000000000000000000000000001;
-        //test2 = 0b00000000000000000000000000000001;
-        //         ^      ^
-    /*cout << endl << "                                ÑÓÌÌÀÒÎĞ\n";
-    cout << "Ââåäèòå ğàçìåğ ìàíòèñû è ıêñïàíåíòû, ıêñïàíåíòà íå áîëåå 8, ìàíòèñà íå áîëåå 23 " << endl;
-    cout << "Ïğèìåğ : 8 23"<<endl;
-    cin >> exp_len;
-    cin >> mant_len;*/
+    cout << endl << "                                Ğ¡Ğ£ĞœĞœĞĞ¢ĞĞ \n";
+    cout << "ĞÑƒĞ¶Ğ½Ñ‹ Ğ»Ğ¸ ĞšĞ¾Ğ½Ñ‚Ñ€Ğ¾Ğ»ÑŒĞ½Ñ‹Ğµ Ñ‚Ğ¾Ñ‡ĞºĞ¸? Y-Ğ´Ğ°, N-Ğ½ĞµÑ‚" << endl;
+    cin >> KT_in;
+    if (KT_in == 'Y') 
+        KT = true;
+    else 
+        KT = false;
+    cout << "Ğ’Ğ²ĞµĞ´Ğ¸Ñ‚Ğµ Ğ¿Ñ€ĞµÑ„Ğ¸ĞºÑÑ‹ 1Ğ³Ğ¾ Ğ¸ 2Ğ³Ğ¾ Ñ‡Ğ¸ÑĞ»Ğ° Ğ¸ ÑĞ°Ğ¼Ğ¸ Ñ‡Ğ¸ÑĞ»Ğ° Ñ‡ĞµÑ€ĞµĞ· Ğ¿Ñ€Ğ¾Ğ±ĞµĞ».\n";
+    cout << "ĞŸÑ€ĞµÑ„Ğ¸ĞºÑÑ‹ --- (d -> dec,h -> hex,b -> bin)\n\n";
 
-    cout << "Ââåäèòå ïğåôèêñû 1ãî è 2ãî ÷èñëà è ñàìè ÷èñëà ÷åğåç ïğîáåë.\n";
-    cout << "Ïğåôèêñû --- (d -> dec,h -> hex,b -> bin)\n\n";
-    cout << "Âíèìàíèå! Åñëè ââîä ñîñòîèò èç Bin, òî ââîäèòü òîëüêî íîğìàëèçîâàííûå, ò.å íå ìåíüøå 0 00000001 00000000000000000000000" << endl;
-    cout << "Ïğèìåğû ââîäà: b 00000000100000000000000000000001 b 00010110011111111111111111111111" << endl;
-    cout << "Ïğèìåğû ââîäà: d 123.42 d -0.12311" << endl;
-    cout << "Ïğèìåğû ââîäà: h 42f69802 d 123 " << endl << endl;
-    //pref1 = 'b';
-    //pref2 = 'b';
-    /*while (test1 != 0)
-    {
-        test = in_ch & test1;
-        in_ch ^= test1;
-        test1 = test << 1;
-
-    }
-    while (test2 != 0)
-    {
-        test = in_ch2 & test2;
-        in_ch2 ^= test2;
-        test2 = test << 1;
-
-    }*/
     cin >> pref1;
     if (pref1 == 'b')
-    {
         cin >> in_ch;
-    }
     else if (pref1 == 'd')
     {
         cin >> vvod1;
@@ -320,23 +341,21 @@ int main()
     else if (pref1 == 'h')
     {
         cin >> hex1;
-        vvod1 = stoi(hex1, 0, 16);
-
-        union
-        {
-            float input;
-            int output;
-        }aa1;
-        aa1.input = vvod1;
-        bitset<32>z1(aa1.output);
-        in_ch = z1;
+        //vvod1 = stoi(hex1, 0, 16);
+        hexInBin(hex1,in_ch);
+        //union
+        //{
+        //    float input;
+        //    int output;
+        //}aa1;
+        //aa1.input = vvod1;
+        //bitset<32>z1(aa1.output);
+        //in_ch = z1;
     }
 
     cin >> pref2;
     if (pref2 == 'b')
-    {
         cin >> in_ch2;
-    }
     else if (pref2 == 'd')
     {
         cin >> vvod2;
@@ -352,83 +371,70 @@ int main()
     }
     else if (pref2 == 'h')
     {
+
         cin >> hex2;
-        vvod2 = stoi(hex2, 0, 16);
-        union
-        {
-            float input;
-            int output;
-        }aa2;
-        aa2.input = vvod2;
-        bitset<32>z2(aa2.output);
-        in_ch2 = z2;
+        hexInBin(hex2, in_ch2);
+        //vvod2 = stoi(hex2, 0, 16);
+        //union
+        //{
+        //    float input;
+        //    int output;
+        //}aa2;
+        //aa2.input = vvod2;
+        //bitset<32>z2(aa2.output);
+        //in_ch2 = z2;
     }
 
 
-    cout << endl << "Ïåğâîå ÷èñëî Bin: " << in_ch << "      Hex: " << hex << in_ch.to_ulong() << "  Dec: " << dec << in_ch.to_ulong() << endl;
-    cout << "Âòîğîå ÷èñëî Bin: " << in_ch2 << "      Hex: " << hex << in_ch2.to_ulong() << "  Dec: " << dec << in_ch2.to_ulong() << endl;
-    cout << "                   ^      ^";
+    cout << "ĞŸĞµÑ€Ğ²Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾ Bin: ";
+    for (int i = size(in_ch)-1; i > 0; i--) 
+    {
+        cout << in_ch[i];
+        if (i == 23 or i==size(in_ch)-1) 
+            cout << " ";
+    }
+    cout << "      Hex: " << hex << in_ch.to_ulong() << "  Dec: " << dec << in_ch.to_ulong() << endl;
+    cout << "Ğ’Ñ‚Ğ¾Ñ€Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾ Bin: ";
+    for (int i = size(in_ch2) - 1; i > 0; i--)
+    {
+        cout << in_ch2[i];
+        if (i == 23 or i == size(in_ch2) - 1)
+            cout << " ";
+    }
+    cout << "      Hex: " << hex << in_ch2.to_ulong() << "  Dec: " << dec << in_ch2.to_ulong() << endl;
+
     q1, q2, q3, q4 = 0;
     for (int i = 0; i < 32; i++)
     {
         if (i < 23 and in_ch[i] == 1)
-        {
             q1++;
-        }
         if (i >= 23 and i < 32 and in_ch[i] == 1)
-        {
             q2++;
-        }
         if (i < 23 and in_ch2[i] == 1)
-        {
             q3++;
-        }
         if (i >= 23 and i < 32 and in_ch2[i] == 1)
-        {
             q4++;
-        }
-    }
+    }    
 
     if (q2 == 8)
-    {
         if (q1 > 0)
-        {
             nestandartniy_otv1 = "Nan";
-        }
         else
-        {
             nestandartniy_otv1 = "inf";
-        }
-    }
     else if (q1 == 0 and q2 == 0)
-    {
         nestandartniy_otv1 = "0";
-    }
     else
-    {
         nestandartniy_otv1 = "";
-    }
 
     if (q4 == 8)
-    {
         if (q3 > 0)
-        {
             nestandartniy_otv2 = "Nan";
-        }
         else
-        {
             nestandartniy_otv2 = "inf";
-        }
-    }
     else if (q3 == 0 and q4 == 0)
-    {
         nestandartniy_otv1 = "0";
-    }
     else
-    {
         nestandartniy_otv1 = "";
-    }
-
 
     if (nestandartniy_otv1 == "Nan" or nestandartniy_otv2 == "Nan") { cout << endl << "Nan" << endl; }
     else if (nestandartniy_otv1 == "inf" and nestandartniy_otv2 == "0") { cout << endl << "inf" << endl; }
@@ -436,10 +442,7 @@ int main()
     else if (nestandartniy_otv1 == "0" and nestandartniy_otv2 == "0") { cout << endl << "0" << endl; }
     else if (nestandartniy_otv1 == "0" and nestandartniy_otv2 == "") { cout << endl << in_ch2 << endl; }
     else if (nestandartniy_otv1 == "" and nestandartniy_otv2 == "0") { cout << endl << in_ch << endl; }
-    //else if (abs(vvod1) == abs(vvod2) and (in_ch[31]==1 or in_ch2[31]==1) and (in_ch[31]!=in_ch2[31]))
-    //{
-    //    cout << "0" << endl;
-    //}
+    else if ((q2 == 0 and q1 != 0) or (q4 == 0 and q3 != 0)) { cout << endl << "Ğ’Ñ‹ Ğ²Ğ²ĞµĞ»Ğ¸ Ğ´ĞµĞ½Ğ¾Ñ€Ğ¼Ğ°Ğ»Ğ¸Ğ·Ğ¾Ğ²Ğ°Ğ½Ğ½Ğ¾Ğµ Ñ‡Ğ¸ÑĞ»Ğ¾" << endl; }
     else
     {
 
@@ -463,23 +466,21 @@ int main()
         }aaa;
         aaa.input = res;
         bitset<32>proverka(aaa.output);
+        cout << endl;
+        cout << "Ğ ĞµĞ·ÑƒĞ»ÑŒÑ‚Ğ°Ñ‚ Bin:    ";
+        for (int i = size(otv) - 1; i > 0; i--)
+        {
+            cout << otv[i];
+            if (i == 23 or i == size(otv) - 1)
+                cout << " ";
+        }
+        cout << "      Hex: " << hex << otv.to_ulong() << "  Dec: " << dec << otv.to_ulong() << endl;
 
-        //cout << endl << "Íàäî         " << "Bin  " << proverka << "      Hex " << hex << proverka.to_ulong() << "   Dec " << dec << proverka.to_ulong() << endl;
-        cout << endl << "Ğåçóëüòàò    " << "Bin  " << otv << "      Hex " << hex << otv.to_ulong() << "   Dec " << dec << otv.to_ulong() << endl;
-        cout << "                   ^      ^" << endl;
         errors = 0;
         for (int i = 0; i < size(otv); i++)
-        {
             if (proverka[i] != otv[i])
-            {
                 errors++;
-            }
-        }
     }
     if (errors != 0)
-    {
-        cout << "Êîëè÷åñòâî íå ñîâïàäåíèé --------------------------------------- " << errors << endl;
-        cout << "ÀÕÒÓÍÃ,ÀËßĞÌ, ÎØÈÁÊÀ"; //break;
-    }
-    //}
+        cout << "ĞĞ¨Ğ˜Ğ‘ĞšĞ"; 
 }
