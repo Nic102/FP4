@@ -289,12 +289,8 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     if (KT == true)
     {
         cout << "5) Округление ------------ ";
-        for (int i = size(vrem1) - 1; i >= 0; i--)
-        {
-            if (i == 22)
-                cout << " ";
-            cout << vrem1[i];
-        }
+        for (int i = size(vrem1) - 1; i >= 23; i--)
+            {cout << vrem1[i];}
         cout << endl;
     }
 
