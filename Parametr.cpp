@@ -69,7 +69,8 @@ void Okruglenie(bitset<48>& vrem_1, int step)
 {
     int i = 23;
     while (i < size(vrem_1))
-        if (vrem_1[i] == 1) {
+        if (vrem_1[i] == 1)
+        {
             if (i < (size(vrem_1) - 1))
             {
                 vrem_1[i] = 0;
@@ -99,7 +100,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     bitset<23> mantisa1, mantisa2;
     bitset<48> vrem1, vrem2, vrem;
     float num_in_fun1, num_in_fun2;
-    char maximum = false, odin_exp = false;
+    char maximum = false, odin_exp = false,vivod_summ=false;
     int step = 0, step1 = 0, step2 = 0, i;
 
     razdelenie(one, znak1, exp1, mantisa1);
@@ -111,6 +112,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
         return;
     else if (znak1 != znak2 and exp1 == exp2 and mantisa1 != mantisa2)
         odin_exp = true;
+
 
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
@@ -130,7 +132,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             maximum = true;
     }
 
-    for (int i = 0; i < size(vrem1); i++)//перезапись мантисы размером 23 бита в буферную переменную размером 48 бит
+    for (int i = 0; i < size(vrem1); i++)
         if (i < (size(vrem1) - 2) / 2)
         {
             vrem1[i + (size(vrem1) - 2) / 2] = mantisa1[i];
@@ -139,39 +141,29 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
 
     vrem1[size(vrem1) - 2] = 1;
     vrem2[size(vrem2) - 2] = 1;
-
     if (step1 == step2)
         step = step1;
     else if (step1 > step2)
     {
         step = step1 - step2;
-        if (KT == true)
-            cout << "1) Разница exp ----------- " << step << endl;
         vrem2 >>= step;
         step = step1;
-        if (KT == true)
-        {
-            cout << "2) Денормализация -------- ";
-            for (int i = size(vrem2)-1; i > 23; i--) 
-                cout << vrem2[i];
-            cout << endl;
-        }
     }
     else if (step1 < step2)
     {
-        step = step2 - step1;
-        if (KT == true)
-            cout << "1) Разница exp ----------- " << step << endl;
+        step = step2 - step1;      
         vrem1 = vrem1 >> step;
         step = step2;
-        if (KT == true)
-        {
-            cout << "2) Денормализация -------- ";
-            for (int i = size(vrem2)-1; i > 23; i--)
-                cout << vrem2[i];
-            cout << endl;
-        }
     }
+    if (KT == true) 
+    {
+        cout << "1) Разница exp ----------- " << abs(step2-step1) << endl;
+        cout << "2) Денормализация -------- ";
+        for (int i = size(vrem2) - 1; i >= 23; i--)
+            cout << vrem1[i];
+        cout << endl;
+    }
+        
 
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
@@ -181,6 +173,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             vrem1 = ~vrem1;
     }
 
+
     while (vrem2 != 0)
     {
         vrem = vrem1 & vrem2;
@@ -189,13 +182,19 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     }
     if (KT == true)
     {
-        cout << "3) Результат сложения ---- ";
-        for (int i = size(vrem1) - 1; i > 23; i--)
+        cout << "3) Cложение мантис ------- ";
+        for (int i = size(vrem1) - 1; i >= 0; i--)
+        {
+            if (i == 22)
+                cout << " ";
             cout << vrem1[i];
+        };
         cout << endl;
+        vivod_summ = true;
     }
+    
 
-    if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))//(znak1[0] == 1 or znak2[0] == 1) лишнее?
+    if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
         i = 0;
         while (i < size(vrem1))
@@ -206,7 +205,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
                     vrem1[i] = 0;
                     i++;
                 }
-                else if (i == (size(vrem1) - 1) and vrem1[i] == 1)
+                else if (i == (size(vrem1) - 1) and vrem1[i] == 1)//?????????????? проверить
                 {
                     vrem1[i] = 0;
                     vrem1[(size(vrem1) - 2) / 2] = 1;
@@ -219,36 +218,48 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
                 break;
             }
 
-        if ((exp1 != exp2))
-            while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)
-            {
-                vrem1 <<= 1;
-                step -= 1;
-            }
-
-        if (KT == true)
+        if (vivod_summ!=true)
         {
-            cout << "4) Нормализация ----- ";
-            for (int i = size(vrem1) - 1; i > 23; i--)
+            cout << "3) Cложение мантис ------- ";
+            for (int i = size(vrem1) - 1; i >= 0; i--)
+            {
+                if (i == 22)
+                    cout << " ";
                 cout << vrem1[i];
+            }
             cout << endl;
         }
+
+        while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)// здесть изменил для (y h 01800000 h 81ffff0f)
+        {//
+            step -= 1;//
+            if (step > 0)
+                vrem1 <<= 1;//
+            else
+                break;
+        }//
     }
 
     if (vrem1[size(vrem1) - 1] != 0)
     {
         vrem1 >>= 1;
         step += 1;
-        if (KT == true)
-        {
-            cout << "4) Нормализация ----- ";
-            for (int i = size(vrem1) - 1; i > 23; i--)
-                cout << vrem1[i];
-            cout << endl;
-        }
+        
     }
 
-    if (vrem1[(size(vrem1) - 2) / 2] == 1 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//Округление если 1 в конце мантисы и хвост начинается с 1
+    if (KT == true)
+    {
+        cout << "4) Нормализация ---------- ";
+        for (int i = size(vrem1) - 1; i >= 0; i--)
+        {
+            if (i == 22)
+                cout << " ";
+            cout << vrem1[i];
+        }
+        cout << endl;
+    }
+
+    if (vrem1[(size(vrem1) - 2) / 2] == 1 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)
     {
         Okruglenie(vrem1, step);
 
@@ -257,15 +268,9 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             vrem1 >>= 1;
             step += 1;
         }
-        if (KT == true)
-        {
-            cout << "5) Округление ----- ";
-            for (int i = size(vrem1) - 1; i > 23; i--)
-                cout << vrem1[i];
-            cout << endl;
-        }
+
     }
-    else if (vrem1[(size(vrem1) - 2) / 2] == 0 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)//Округление если 0 в конце мантисы и хвост начинается с 1 и есть хотя бы одна единица в хвосте кроме первой
+    else if (vrem1[(size(vrem1) - 2) / 2] == 0 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)
     {
         for (int i = 0; i < ((size(vrem1) - 2) / 2) - 1; i++)
             if (vrem1[i] == 1)
@@ -279,17 +284,21 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             vrem1 >>= 1;
             step += 1;
         }
-
-        if (KT == true)
-        {
-            cout << "5) Округление ----- ";
-            for (int i = size(vrem1) - 1; i > 23; i--)
-                cout << vrem1[i];
-            cout << endl;
-        }
     }
 
-    for (int i = ((size(vrem1) / 2) + 1); i < size(vrem1); i++)//перезапись буферной переменной мантисы в переменную ответа
+    if (KT == true)
+    {
+        cout << "5) Округление ------------ ";
+        for (int i = size(vrem1) - 1; i >= 0; i--)
+        {
+            if (i == 22)
+                cout << " ";
+            cout << vrem1[i];
+        }
+        cout << endl;
+    }
+
+    for (int i = ((size(vrem1) / 2) + 1); i < size(vrem1); i++)
         otv[i - ((size(vrem1) / 2) + 1)] = vrem1[i - 2];
 
     if ((znak1[0] == 1 and znak2[0] == 1) or (znak1[0] == 1 and maximum == false) or (znak2[0] == 1 and maximum == true))
@@ -300,7 +309,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
 
     for (int i = 0; i < 8; i++)
         otv[((size(vrem1) - 2) / 2) + i] = exp1[i];
-
 }
 
 
@@ -314,12 +322,18 @@ int main()
     char pref1, pref2, KT_in;
 
     cout << endl << "                                СУММАТОР\n";
-    cout << "Нужны ли Контрольные точки? Y-да, N-нет" << endl;
+    cout << "Нужны ли Контрольные точки? y-да, n-нет" << endl;
     cin >> KT_in;
-    if (KT_in == 'Y') 
+    if (KT_in == 'y') 
         KT = true;
-    else 
+    else if (KT_in=='n')
+    {
         KT = false;
+    }
+    else 
+    {
+        cout << "Не правильный ввод Контрольной точки" << endl;
+    }
     cout << "Введите префиксы 1го и 2го числа и сами числа через пробел.\n";
     cout << "Префиксы --- (d -> dec,h -> hex,b -> bin)\n\n";
 
@@ -341,16 +355,7 @@ int main()
     else if (pref1 == 'h')
     {
         cin >> hex1;
-        //vvod1 = stoi(hex1, 0, 16);
         hexInBin(hex1,in_ch);
-        //union
-        //{
-        //    float input;
-        //    int output;
-        //}aa1;
-        //aa1.input = vvod1;
-        //bitset<32>z1(aa1.output);
-        //in_ch = z1;
     }
 
     cin >> pref2;
@@ -374,20 +379,11 @@ int main()
 
         cin >> hex2;
         hexInBin(hex2, in_ch2);
-        //vvod2 = stoi(hex2, 0, 16);
-        //union
-        //{
-        //    float input;
-        //    int output;
-        //}aa2;
-        //aa2.input = vvod2;
-        //bitset<32>z2(aa2.output);
-        //in_ch2 = z2;
     }
 
 
     cout << "Первое число Bin: ";
-    for (int i = size(in_ch)-1; i > 0; i--) 
+    for (int i = size(in_ch)-1; i >= 0; i--) 
     {
         cout << in_ch[i];
         if (i == 23 or i==size(in_ch)-1) 
@@ -395,7 +391,7 @@ int main()
     }
     cout << "      Hex: " << hex << in_ch.to_ulong() << "  Dec: " << dec << in_ch.to_ulong() << endl;
     cout << "Второе число Bin: ";
-    for (int i = size(in_ch2) - 1; i > 0; i--)
+    for (int i = size(in_ch2) - 1; i >= 0; i--)
     {
         cout << in_ch2[i];
         if (i == 23 or i == size(in_ch2) - 1)
@@ -467,8 +463,8 @@ int main()
         aaa.input = res;
         bitset<32>proverka(aaa.output);
         cout << endl;
-        cout << "Результат Bin:    ";
-        for (int i = size(otv) - 1; i > 0; i--)
+        cout << "Результат Bin:          ";
+        for (int i = size(otv) - 1; i >= 0; i--)
         {
             cout << otv[i];
             if (i == 23 or i == size(otv) - 1)
@@ -480,7 +476,18 @@ int main()
         for (int i = 0; i < size(otv); i++)
             if (proverka[i] != otv[i])
                 errors++;
+
+        if (errors != 0)
+        {
+            cout << "ОШИБКА"<<endl;
+            cout <<"Правильный результат -- ";
+            for (int i = size(proverka) - 1; i >= 0; i--)
+            {
+                cout << proverka[i];
+                if (i == 23 or i == size(proverka) - 1)
+                    cout << " ";
+            }
+            cout << endl;
+        }
     }
-    if (errors != 0)
-        cout << "ОШИБКА"; 
-}
+    return main(); }
