@@ -44,7 +44,6 @@ void hexInBin(string a,bitset<32> &b)
             b[31 - i] = 1;
         else if(c[i]=='0')
             b[31 - i] = 0;
-
 }
 
 
@@ -70,7 +69,6 @@ void Okruglenie(bitset<48>& vrem_1, int step)
     int i = 23;
     while (i < size(vrem_1))
         if (vrem_1[i] == 1)
-        {
             if (i < (size(vrem_1) - 1))
             {
                 vrem_1[i] = 0;
@@ -83,7 +81,6 @@ void Okruglenie(bitset<48>& vrem_1, int step)
                 step += 1;
                 break;
             }
-        }
         else if (vrem_1[i] == 0)
         {
             vrem_1[i] = 1;
@@ -113,7 +110,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     else if (znak1 != znak2 and exp1 == exp2 and mantisa1 != mantisa2)
         odin_exp = true;
 
-
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
         union
@@ -131,14 +127,12 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
         else if (abs(num_in_fun1) < abs(num_in_fun2))
             maximum = true;
     }
-
     for (int i = 0; i < size(vrem1); i++)
         if (i < (size(vrem1) - 2) / 2)
         {
             vrem1[i + (size(vrem1) - 2) / 2] = mantisa1[i];
             vrem2[i + (size(vrem1) - 2) / 2] = mantisa2[i];
         }
-
     vrem1[size(vrem1) - 2] = 1;
     vrem2[size(vrem2) - 2] = 1;
     if (step1 == step2)
@@ -163,8 +157,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             cout << vrem1[i];
         cout << endl;
     }
-        
-
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
         if (maximum == false)
@@ -172,8 +164,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
         else if (maximum == true)
             vrem1 = ~vrem1;
     }
-
-
     while (vrem2 != 0)
     {
         vrem = vrem1 & vrem2;
@@ -188,12 +178,10 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             if (i == 22)
                 cout << " ";
             cout << vrem1[i];
-        };
+        }
         cout << endl;
         vivod_summ = true;
     }
-    
-
     if ((znak1[0] == 1 or znak2[0] == 1) and (znak1 != znak2))
     {
         i = 0;
@@ -217,7 +205,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
                 vrem1[i] = 1;
                 break;
             }
-
         if (vivod_summ!=true)
         {
             cout << "3) Cложение мантис ------- ";
@@ -229,24 +216,20 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             }
             cout << endl;
         }
-
-        while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)// здесть изменил для (y h 01800000 h 81ffff0f)
-        {//
-            step -= 1;//
+        while (vrem1[size(vrem1) - 1] == 0 and vrem1[size(vrem1) - 2] == 0)
+        {
+            step -= 1;
             if (step > 0)
-                vrem1 <<= 1;//
+                vrem1 <<= 1;
             else
                 break;
-        }//
+        }
     }
-
     if (vrem1[size(vrem1) - 1] != 0)
     {
         vrem1 >>= 1;
         step += 1;
-        
     }
-
     if (KT == true)
     {
         cout << "4) Нормализация ---------- ";
@@ -268,7 +251,6 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
             vrem1 >>= 1;
             step += 1;
         }
-
     }
     else if (vrem1[(size(vrem1) - 2) / 2] == 0 and vrem1[((size(vrem1) - 2) / 2) - 1] == 1)
     {
@@ -278,7 +260,7 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
                 Okruglenie(vrem1, step);
                 break;
             }
-
+        
         if (vrem1[size(vrem1) - 1] != 0)
         {
             vrem1 >>= 1;
@@ -290,19 +272,17 @@ void Summator(bitset<32> one, bitset<32> two, bitset<32>& otv)
     {
         cout << "5) Округление ------------ ";
         for (int i = size(vrem1) - 1; i >= 23; i--)
-            {cout << vrem1[i];}
+            cout << vrem1[i];
         cout << endl;
     }
-
     for (int i = ((size(vrem1) / 2) + 1); i < size(vrem1); i++)
         otv[i - ((size(vrem1) / 2) + 1)] = vrem1[i - 2];
 
     if ((znak1[0] == 1 and znak2[0] == 1) or (znak1[0] == 1 and maximum == false) or (znak2[0] == 1 and maximum == true))
         otv[size(otv) - 1] = 1;
-
+    
     bitset<8>bin_exp(step);
     exp1 = bin_exp;
-
     for (int i = 0; i < 8; i++)
         otv[((size(vrem1) - 2) / 2) + i] = exp1[i];
 }
@@ -329,11 +309,18 @@ int main()
     else 
     {
         cout << "Не правильный ввод Контрольной точки" << endl;
+        exit(0);
     }
     cout << "Введите префиксы 1го и 2го числа и сами числа через пробел.\n";
     cout << "Префиксы --- (d -> dec,h -> hex,b -> bin)\n\n";
-
-    cin >> pref1;
+    while (1) 
+    {
+        cin >> pref1;
+        if (pref1 == 'b' or pref1 == 'd' or pref1 == 'h') 
+            break;
+        else 
+            cout << "Вы ввели не корректный префикс 2" << endl;
+    }
     if (pref1 == 'b')
         cin >> in_ch;
     else if (pref1 == 'd')
@@ -353,14 +340,19 @@ int main()
         cin >> hex1;
         hexInBin(hex1,in_ch);
     }
-
-    cin >> pref2;
+    while (1)
+    {
+        cin >> pref2;
+        if (pref2 == 'b' or pref2 == 'd' or pref2 == 'h')
+            break;
+        else
+            cout << "Вы ввели не корректный префикс, попробуйте еще" << endl;
+    }
     if (pref2 == 'b')
         cin >> in_ch2;
     else if (pref2 == 'd')
     {
         cin >> vvod2;
-
         union
         {
             float input;
@@ -376,8 +368,6 @@ int main()
         cin >> hex2;
         hexInBin(hex2, in_ch2);
     }
-
-
     cout << "Первое число Bin: ";
     for (int i = size(in_ch)-1; i >= 0; i--) 
     {
@@ -394,7 +384,6 @@ int main()
             cout << " ";
     }
     cout << "      Hex: " << hex << in_ch2.to_ulong() << "  Dec: " << dec << in_ch2.to_ulong() << endl;
-
     q1, q2, q3, q4 = 0;
     for (int i = 0; i < 32; i++)
     {
@@ -407,7 +396,7 @@ int main()
         if (i >= 23 and i < 32 and in_ch2[i] == 1)
             q4++;
     }    
-
+    
     if (q2 == 8)
         if (q1 > 0)
             nestandartniy_otv1 = "Nan";
@@ -435,55 +424,59 @@ int main()
     else if (nestandartniy_otv1 == "0" and nestandartniy_otv2 == "") { cout << endl << in_ch2 << endl; }
     else if (nestandartniy_otv1 == "" and nestandartniy_otv2 == "0") { cout << endl << in_ch << endl; }
     else if ((q2 == 0 and q1 != 0) or (q4 == 0 and q3 != 0)) { cout << endl << "Вы ввели денормализованное число" << endl; }
-    else
-    {
-
+    else{
         Summator(in_ch, in_ch2, otv);
-
-        union
+        q = 0;
+        for (int i = 0; i < size(otv); i++) 
+            if (otv[i] == 1) 
+                q++;
+        if (q == 31) 
+            cout <<endl<<"inf"<<endl;
+        else 
         {
-            unsigned long long int input;
-            float output;
-        }data;
-        data.input = in_ch.to_ulong();
-        num_1 = data.output;
-        data.input = in_ch2.to_ulong();
-        num_2 = data.output;
-        res = num_1 + num_2;
-
-        union
-        {
-            float input;
-            int output;
-        }aaa;
-        aaa.input = res;
-        bitset<32>proverka(aaa.output);
-        cout << endl;
-        cout << "Результат Bin:          ";
-        for (int i = size(otv) - 1; i >= 0; i--)
-        {
-            cout << otv[i];
-            if (i == 23 or i == size(otv) - 1)
-                cout << " ";
-        }
-        cout << "      Hex: " << hex << otv.to_ulong() << "  Dec: " << dec << otv.to_ulong() << endl;
-
-        errors = 0;
-        for (int i = 0; i < size(otv); i++)
-            if (proverka[i] != otv[i])
-                errors++;
-
-        if (errors != 0)
-        {
-            cout << "ОШИБКА"<<endl;
-            cout <<"Правильный результат -- ";
-            for (int i = size(proverka) - 1; i >= 0; i--)
+            union
             {
-                cout << proverka[i];
-                if (i == 23 or i == size(proverka) - 1)
+                unsigned long long int input;
+                float output;
+            }data;
+            data.input = in_ch.to_ulong();
+            num_1 = data.output;
+            data.input = in_ch2.to_ulong();
+            num_2 = data.output;
+            res = num_1 + num_2;
+            union
+            {
+                float input;
+                int output;
+            }aaa;
+            aaa.input = res;
+            bitset<32>proverka(aaa.output);
+            cout << endl;
+            cout << "Результат Bin:          ";
+            for (int i = size(otv) - 1; i >= 0; i--)
+            {
+                cout << otv[i];
+                if (i == 23 or i == size(otv) - 1)
                     cout << " ";
             }
-            cout << endl;
+            cout << "      Hex: " << hex << otv.to_ulong() << "  Dec: " << dec << otv.to_ulong() << endl;
+            errors = 0;
+            for (int i = 0; i < size(otv); i++)
+                if (proverka[i] != otv[i])
+                    errors++;
+            if (errors != 0)
+            {
+                cout << "ОШИБКА" << endl;
+                cout << "Правильный результат -- ";
+                for (int i = size(proverka) - 1; i >= 0; i--)
+                {
+                    cout << proverka[i];
+                    if (i == 23 or i == size(proverka) - 1)
+                        cout << " ";
+                }
+                cout << endl;
+            }
         }
     }
-    return main(); }
+    return main();
+}
